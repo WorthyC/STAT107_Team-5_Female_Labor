@@ -1,7 +1,30 @@
 #placeholder text
 
 ```{r}
+#######################################################
+remove_na <- function(df) { ## Automatize the removal of missing observations.
+  n_obs <- nrow(df)
+  missing <- rep(FALSE, n_obs)
+  for (obs_ind in 1:n_obs) {
+    obs <- df[obs_ind, ]
+    n_missing <- sum(is.na(obs))
+    if(n_missing > 0) {
+      missing[obs_ind] <- TRUE
+    }
+  }
+  df_red <- df[!missing, ]
+
+  return(df_red)
+}
+#######################################################
+```
+
+```{r}
 LaborData <- read.csv("00_LaborForceData.csv")
 EducationExp <- read.csv("00_GovEducationExpense.csv")
+
+#will use the remove_na function to clear any missing observations
+remove_na(EducationExp)
+remove_na(LaborData)
 ```
 
