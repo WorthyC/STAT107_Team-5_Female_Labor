@@ -1,0 +1,7 @@
+#placeholder text
+
+```{r}
+LaborData <- read.csv("00_LaborForceData.csv")
+EducationExp <- read.csv("00_GovEducationExpense.csv")
+```
+
