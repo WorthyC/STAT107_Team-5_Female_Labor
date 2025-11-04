@@ -1,4 +1,4 @@
-#placeholder text
+Below are functions used to clean the data.
 
 ```{r}
 #######################################################
@@ -17,14 +17,33 @@ remove_na <- function(df) { ## Automatize the removal of missing observations.
   return(df_red)
 }
 #######################################################
+to_factors <- function(df) { ## Turn all character variables to factors.
+  n_vars <- ncol(df)
+  for (var_ind in 1:n_vars) {
+    var <- df[, var_ind]
+    if (class(var) == "character") {
+      df[, var_ind] <- factor(var)
+    }
+  }
+  return(df)
+}
 ```
 
-```{r}
-LaborData <- read.csv("00_LaborForceData.csv")
-EducationExp <- read.csv("00_GovEducationExpense.csv")
+We'll remove any unnecessary variables from the datasets then apply the functions defined above to each dataset.
 
-#will use the remove_na function to clear any missing observations
+```{r}
+LaborData <- data.frame(read.csv("00_LaborForceData.csv"))
+EducationExp <- data.frame(read.csv("00_GovEducationExpense.csv"))
+
+#removes unnecessary variables for the project
+EducationExp <- EducationExp[,-c(1,2,3,4,5,8,9,14,15,16,17,18,19,20,21,22,23, 26:45)]
+LaborData <- LaborData[,-c(1,2,3,4,5,8,9,14,15,16,17,18,19,20,21,22,23, 26:45)]
+
+#will use the remove_na function to clear any missing observations if any
 remove_na(EducationExp)
 remove_na(LaborData)
+#uses to_factors to convert all data into factors if not already
+to_factors(EducationExp)
+to_factors(LaborData)
 ```
 
