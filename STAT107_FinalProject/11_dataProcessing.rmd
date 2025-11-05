@@ -93,12 +93,25 @@ df <- edu_clean %>%
   left_join(leave_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year")) %>%
   left_join(enroll_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year"))
 
-sum(is.na(df))
-colSums(is.na(df)) / nrow(df)
+colnames(df)[colnames(df) == "REF_AREA"] <- "country_code"
+colnames(df)[colnames(df) == "REF_AREA_LABEL"] <- "country"
+colnames(df)[colnames(df) == "TIME_PERIOD"] <- "year"
 ```
 
 
+```{r}
+sum(is.na(df))
+colSums(is.na(df)) / nrow(df)
 
+colSums(!is.na(df))
+```
+Certain columns have a large proportion of missing values which can be worrying when training models. However, these columns still have a large amount of observations despite the proportion of missing values. Since we plan on running a regression on our data, the high proportion of missing data should not have too large of an effect on our model so long as we have a larger enough sample size. We can also omit different variables based on missingness and test the accuracy of different regression models. 
+
+We can start making preliminary visualization for each variable.
+
+```{r}
+
+```
 
 
 
