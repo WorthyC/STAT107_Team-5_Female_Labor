@@ -1,6 +1,8 @@
 Below are functions used to clean the data.
 
 ```{r}
+source("00_requirements.R")
+
 #######################################################
 remove_na <- function(df) { ## Automatize the removal of missing observations.
   n_obs <- nrow(df)
@@ -57,11 +59,43 @@ enroll_clean <- TertiaryEnroll[,-c(1,2)]
 df_list <- list(edu_clean, flabor_clean, brate_clean, fert_clean, leave_clean, enroll_clean)
 
 #check for missing values
-for (df in df_list) {
-  print(sum(is.na(df)))
+for (d in df_list) {
+  print(sum(is.na(d)))
 }
 ```
+Parental leave and Tertiary Enrollment are structured a bit differently from the other datasets. We need to separate male and female values and consider what we want to include in our model.
 
+```{r}
+#separating male and female values into their own columns
+leave_sep <- leave_clean %>%
+  pivot_wider(names_from = Disaggregation, values_from = Value, names_prefix = "days_")
+
+enroll_sep <- enroll_clean %>%
+  pivot_wider(names_from = Disaggregation, values_from = Value, names_prefix = "enrolled_")
+```
+
+We want to combine all of our data into one dataframe. However, some of the column names are not very descriptive so we must change the column names first.
+
+```{r}
+colnames(edu_clean)[colnames(edu_clean) == "OBS_VALUE"] <- "edu_exp"
+colnames(flabor_clean)[colnames(flabor_clean) == "OBS_VALUE"] <- "female_labor_rate"
+colnames(brate_clean)[colnames(brate_clean) == "OBS_VALUE"] <- "birth_rate"
+colnames(fert_clean)[colnames(fert_clean) == "OBS_VALUE"] <- "fertility_rate"
+```
+
+Now we can merge all of our datasets into one dataframe
+
+```{r}
+df <- edu_clean %>%
+  left_join(flabor_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD")) %>%
+  left_join(brate_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD")) %>%
+  left_join(fert_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD")) %>%
+  left_join(leave_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year")) %>%
+  left_join(enroll_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year"))
+
+sum(is.na(df))
+colSums(is.na(df)) / nrow(df)
+```
 
 
 
