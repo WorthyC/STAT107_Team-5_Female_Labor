@@ -29,16 +29,31 @@ to_factors <- function(df) { ## Turn all character variables to factors.
 }
 ```
 
+Load data
+
+```{r}
+FemaleLabor <- data.frame(read.csv("00_LaborForceData.csv"))
+EducationExp <- data.frame(read.csv("00_GovEducationExpense.csv"))
+BirthRate <- data.frame(read.csv("00_BirthRate.csv"))
+FertilityRate <- data.frame(read.csv("00_FertilityRate.csv"))
+ParentalLeave <- data.frame(read.csv("00_ParentalLeave.csv"))
+TertiaryEnroll <- data.frame(read.csv("00_TertiaryEnrollmentRate.csv"))
+```
+
 We'll remove any unnecessary variables from the datasets then apply the functions defined above to each dataset.
 
 ```{r}
-LaborData <- data.frame(read.csv("00_LaborForceData.csv"))
-EducationExp <- data.frame(read.csv("00_GovEducationExpense.csv"))
+keep_col <- c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD", "OBS_VALUE")
 
-#removes unnecessary variables for the project
-EducationExp <- EducationExp[,-c(1,2,3,4,5,8,9,14,15,16,17,18,19,20,21,22,23, 26:45)]
-LaborData <- LaborData[,-c(1,2,3,4,5,8,9,14,15,16,17,18,19,20,21,22,23, 26:45)]
+edu_clean <- EducationExp[,keep_col]
+flabor_clean <- FemaleLabor[,keep_col]
+brate_clean <- BirthRate[,keep_col]
+fert_clean <- FertilityRate[,keep_col]
+leave_clean <- ParentalLeave[,-c(1,2)]
+enroll_clean <- TertiaryEnroll[,-c(1,2)]
+```
 
+```{r}
 #will use the remove_na function to clear any missing observations if any
 remove_na(EducationExp)
 remove_na(LaborData)
@@ -46,4 +61,14 @@ remove_na(LaborData)
 to_factors(EducationExp)
 to_factors(LaborData)
 ```
+
+
+
+
+
+
+
+
+
+
 
