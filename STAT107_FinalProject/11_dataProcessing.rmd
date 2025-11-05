@@ -54,12 +54,12 @@ enroll_clean <- TertiaryEnroll[,-c(1,2)]
 ```
 
 ```{r}
-#will use the remove_na function to clear any missing observations if any
-remove_na(EducationExp)
-remove_na(LaborData)
-#uses to_factors to convert all data into factors if not already
-to_factors(EducationExp)
-to_factors(LaborData)
+df_list <- list(edu_clean, flabor_clean, brate_clean, fert_clean, leave_clean, enroll_clean)
+
+#check for missing values
+for (df in df_list) {
+  print(sum(is.na(df)))
+}
 ```
 
 
