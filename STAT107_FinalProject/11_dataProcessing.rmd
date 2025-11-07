@@ -97,7 +97,7 @@ Certain columns have a large proportion of missing values which can be worrying 
 Our preliminary regression would most likely look something like:
 
 $$
-FemaleLabor_i = \beta_0 + \beta_1 EducationExpenditure + \beta_2 BirthRate + \beta_3 FertilityRate + \\ \beta_4 ParentalLeave + \beta_5 TertiaryEnrollment + \beta_6GDP + \beta_7population + \varepsilon_i
+FemaleLabor_i = \beta_0 + \beta_1 EducationExpenditure + \beta_2 BirthRate + \beta_3 FertilityRate + \\ \beta_4 ParentalLeave + \beta_5 TertiaryEnrollment + \beta_6GDP + \beta_7Population + \varepsilon_i
 $$
 We can explore other options within our model as we explore the relationships between different variables. Introducing exponential variables, interaction terms, time-fixed effects, applying log transformations, or even removing some variables may help improve the accuracy of our model.
 
@@ -108,17 +108,23 @@ We can start making preliminary visualizations for each variable.
 summary(df$edu_exp)
 hist(df$edu_exp, breaks = 75)
 ```
+Government expenditure on education displays a right skewed distribution. There are not many outliers, but the outliers that do exist are rather extreme. It may be wise to perform a log transformation to reduce skewness and combat extreme values.
+
 
 #Birth Rate (per 1000 people)
 ```{r}
 summary(df$birth_rate)
 hist(df$birth_rate, breaks = 50)
 ```
+Birth Rates show a right skewed distribution. However, the data is relatively spread out with few to no outliers. Log transformation seems to be unnecessary for birth rates. Something to keep in mind when running birth rates as an independent variable in our regression is reverse causality. We would be exploring the effect of birth rate on female labor rate when in reality it may be female labor rate causing birth rate to behave a certain way. 
+
 #Fertility Rate (births per woman)
 ```{r}
 summary(df$fertility_rate)
 hist(df$fertility_rate, breaks = 50)
 ```
+Fertility Rate shows a right skewed distribution. Similar to birth rate there is a relatively even spread of data with few to no outliers. Log transformation seems to be unnecessary. However, we must be careful when including both fertility rate and birth rate in our model it may risk multicollinearity. 
+
 #Length of paid parental leave (calendar days)
 ```{r}
 #mother
@@ -128,6 +134,8 @@ summary(df$days_male)
 hist(df$days_female, breaks = 50)
 hist(df$days_male, breaks = 50)
 ```
+Data for paid parental leave is extremely right skewed and has many extreme outliers for both genders. Log transformation will most likely be necessary if we want to include this in our model. Paid parental leave is one of the variables with a significant amount of missing values. It should not have too large of an effect on the regression as there are still a significant amount of observations, but it is still something we should be careful about.
+
 #School enrollment, tertiary (% gross)
 ```{r}
 #Female
@@ -140,11 +148,13 @@ hist(df$enrolled_male, breaks = 50)
 hist(df$enrolled_female, breaks = 50)
 hist(df$enrolled_total, breaks = 50)
 ```
+Tertiary enrollemtn also shows a right skewed distribution. There is a relatively even spread of the data with few outliers. 
 #GDP (current US$)
 ```{r}
 summary(df$gdp)
 hist(df$gdp, breaks = 50)
 ```
+GDP is heavily right skewed with some extreme outliers. Log transformation will probably be necessary for this variable.
 #Population
 ```{r}
 summary(df$population)
@@ -155,6 +165,7 @@ hist(df$population, breaks = 50)
 summary(df$female_labor_rate)
 hist(df$female_labor_rate, breaks = 50)
 ```
+Female labor participation rate follow a distribution with little skewness and few outliers. 
 #Correlation Matrix
 
 
