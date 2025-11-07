@@ -14,6 +14,10 @@ BirthRate <- data.frame(read.csv("00_BirthRate.csv"))
 FertilityRate <- data.frame(read.csv("00_FertilityRate.csv"))
 ParentalLeave <- data.frame(read.csv("00_ParentalLeave.csv"))
 TertiaryEnroll <- data.frame(read.csv("00_TertiaryEnrollmentRate.csv"))
+
+#Control variables
+GDP <- data.frame(read.csv("00_GDPcurrentUS.csv"))
+Population <- data.frame(read.csv("00_Population.csv"))
 ```
 
 We'll remove any unnecessary variables from the datasets then apply the functions defined above to each dataset.
@@ -27,10 +31,14 @@ brate_clean <- BirthRate[,keep_col]
 fert_clean <- FertilityRate[,keep_col]
 leave_clean <- ParentalLeave[,-c(1,2)]
 enroll_clean <- TertiaryEnroll[,-c(1,2)]
+
+#controls
+gdp_clean <- GDP[, keep_col]
+population_clean <- Population[, keep_col]
 ```
 
 ```{r}
-df_list <- list(edu_clean, flabor_clean, brate_clean, fert_clean, leave_clean, enroll_clean)
+df_list <- list(edu_clean, flabor_clean, brate_clean, fert_clean, leave_clean, enroll_clean, gdp_clean, population_clean, unemployment_clean)
 
 #check for missing values
 for (d in df_list) {
@@ -46,6 +54,7 @@ leave_sep <- leave_clean %>%
 
 enroll_sep <- enroll_clean %>%
   pivot_wider(names_from = Disaggregation, values_from = Value, names_prefix = "enrolled_")
+
 ```
 
 We want to combine all of our data into one dataframe. However, some of the column names are not very descriptive so we must change the column names first.
@@ -55,6 +64,8 @@ colnames(edu_clean)[colnames(edu_clean) == "OBS_VALUE"] <- "edu_exp"
 colnames(flabor_clean)[colnames(flabor_clean) == "OBS_VALUE"] <- "female_labor_rate"
 colnames(brate_clean)[colnames(brate_clean) == "OBS_VALUE"] <- "birth_rate"
 colnames(fert_clean)[colnames(fert_clean) == "OBS_VALUE"] <- "fertility_rate"
+colnames(gdp_clean)[colnames(gdp_clean) == "OBS_VALUE"] <- "gdp"
+colnames(population_clean)[colnames(population_clean) == "OBS_VALUE"] <- "population"
 ```
 
 Now we can merge all of our datasets into one dataframe
@@ -65,7 +76,9 @@ df <- edu_clean %>%
   left_join(brate_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD")) %>%
   left_join(fert_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD")) %>%
   left_join(leave_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year")) %>%
-  left_join(enroll_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year"))
+  left_join(enroll_sep, by = c("REF_AREA" = "Country.Code", "REF_AREA_LABEL" = "Country.Name", "TIME_PERIOD" = "Year")) %>%
+  left_join(gdp_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD")) %>%
+  left_join(population_clean, by = c("REF_AREA", "REF_AREA_LABEL", "TIME_PERIOD"))
 
 colnames(df)[colnames(df) == "REF_AREA"] <- "country_code"
 colnames(df)[colnames(df) == "REF_AREA_LABEL"] <- "country"
@@ -84,7 +97,7 @@ Certain columns have a large proportion of missing values which can be worrying 
 Our preliminary regression would most likely look something like:
 
 $$
-FemaleLabor_i = \beta_0 + \beta_1 EducationExpenditure + \beta_2 BirthRate + \beta_3 FertilityRate + \\ \beta_4 ParentalLeave + \beta_5 TertiaryEnrollment + \varepsilon_i
+FemaleLabor_i = \beta_0 + \beta_1 EducationExpenditure + \beta_2 BirthRate + \beta_3 FertilityRate + \\ \beta_4 ParentalLeave + \beta_5 TertiaryEnrollment + \beta_6GDP + \beta_7population + \varepsilon_i
 $$
 We can explore other options within our model as we explore the relationships between different variables. Introducing exponential variables, interaction terms, time-fixed effects, applying log transformations, or even removing some variables may help improve the accuracy of our model.
 
@@ -127,7 +140,16 @@ hist(df$enrolled_male, breaks = 50)
 hist(df$enrolled_female, breaks = 50)
 hist(df$enrolled_total, breaks = 50)
 ```
-
+#GDP (current US$)
+```{r}
+summary(df$gdp)
+hist(df$gdp, breaks = 50)
+```
+#Population
+```{r}
+summary(df$population)
+hist(df$population, breaks = 50)
+```
 #Female Labor Participation Rate (% of female population age 15+)
 ```{r}
 summary(df$female_labor_rate)
