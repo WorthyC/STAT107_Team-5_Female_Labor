@@ -23,5 +23,5 @@ investigation.\
 If running our Final Report, you can run it independently throught RStudio.\
 \
 Contributions:\
-Chris Whall: Repository Set-up, Drafting Final Report, Requirements\
+Chris Whall: Repository Set-up/Initial Files, Drafting Final Report, Requirements\
 Jonathan Li: Data Cleaning, Visualizations, Adding Necessary Datasets
