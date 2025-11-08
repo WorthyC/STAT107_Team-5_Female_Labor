@@ -6,24 +6,49 @@ date: "2025-11-07"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+load("12_dataSaving.RData")
 ```
 
 # Abstract:
 
-This study investigates the what impact female labor has on a countries birthrate. Additionally, we also want to explore if how much a country's expenditure on education affects the total amount of female contribution in the workforce. We aim to use visualizations such as histograms, box plots, and scatter plots to answer this question. Using these visualizations will allow us to see the distribution of key variables to help give a clear answer.
+This study investigates the what impact birthrate has on a countries female labor. Additionally, we also want to explore if how much a country's expenditure on education affects the total amount of female contribution in the workforce. We aim to use visualizations such as histograms, box plots, and scatter plots to answer this question. Using these visualizations will allow us to see the distribution of key variables to help give a clear answer.
 
 # Introduction:
 
-We wanted to know if countries with higher female labor contributed to lower birthrates in that country. Our hypothesis is that we believe that female labor does decrease birthrates. This analysis also explores if government spending on education and schools assist in increasing female labor participation. If there is a significant correlation, countries with declining populations could use this information to balance employment, education, and growth to stable levels. 
+We wanted to know if countries with higher birthrate contributed to lower female labor contribution in that country. Our hypothesis is that we believe that birthrate does decrease female participation in the workforce. This analysis also explores if government spending on education and schools assist in increasing female labor participation. If there is a significant correlation, countries with declining populations could use this information to balance employment, education, and growth to stable levels. 
 
 # Data:
 
-
+The data we will be utilizing for the analysis are: Birthrates, Fertility Rates, Parental Leave, Total Population, tertiary school enrollment, total expense of education, Female labor contribution, all of different countries. The GDP is also used but only from the US. We obtained all our data from world bank https://data.worldbank.org. There were a total of 45 variables and we cut it down most datasets down to under 10 due to many variables being unecessary for our research. Some datasets have around 6000-8000 observations, while larger ones contain 16000-20000. Removal of some variables was preformed as stated previously from 45 to as low as 4 for some sets. After that, datasets are then checked for any missing values and removed. Then column names for the sets are renamed to more descriptive names, and finally combined into one data frame to be used in comparisons and visualizations.
 
 # Visualization:
+Below is a histogram of Government Expenditure on Education (% of GDP).
 
 ```{r echo=FALSE}
+summary(df$edu_exp)
+hist(df$edu_exp, breaks = 75,
+     main = "Distribution of Government Expenditure on Education",
+     xlab = "Government Expenditure on Education (% of GDP)")
+```
+Below is a histogram of Birth Rate (per 1000 people).
 
+```{r echo=FALSE}
+summary(df$birth_rate)
+hist(df$birth_rate, breaks = 50,
+     main = "Distribution of Birth Rate",
+     xlab = "Birth Rate (per 1000 people)")
+```
+Below is a histogram of Female Labor Participation Rate (% of female population age 15+).
+
+```{r echo=FALSE}
+summary(df$female_labor_rate)
+hist(df$female_labor_rate, breaks = 50,
+     main = "Distribution of Female Labor Participation Rate",
+     xlab = "Female Labor Participation Rate (% of female population age 15+)")
 ```
 
+We plan on using more than just histograms in our report but these are our current visualizations we plan on using.
+
 # Analysis:
+
+As seen above, we will use these graphs and future planned scatter/box plots and other necessary visuals, to cross reference this data and find a conclusion on our two questions we will solve. We'll test Birthrates against female labor participation across different countries and review the data. We'll then pit it against other forms of data that could contribute to female labor to see if another factor could be the main cause. We'll do the same process with government spending on education and provide all findings we come across.
