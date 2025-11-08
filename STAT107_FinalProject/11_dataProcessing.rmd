@@ -38,7 +38,7 @@ population_clean <- Population[, keep_col]
 ```
 
 ```{r}
-df_list <- list(edu_clean, flabor_clean, brate_clean, fert_clean, leave_clean, enroll_clean, gdp_clean, population_clean, unemployment_clean)
+df_list <- list(edu_clean, flabor_clean, brate_clean, fert_clean, leave_clean, enroll_clean, gdp_clean, population_clean)
 
 #check for missing values
 for (d in df_list) {
