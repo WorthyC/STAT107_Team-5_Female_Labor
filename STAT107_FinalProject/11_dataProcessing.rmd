@@ -190,6 +190,53 @@ hist(df$female_labor_rate, breaks = 50,
 Female labor participation rate follow a distribution with little skewness and few outliers. 
 #Correlation Matrix
 
+```{r}
+full_cmat <- cor_mat(
+  df,
+  vars = c(3:ncol(df)),
+  method = "pearson",
+  alternative = "two.sided",
+  conf.level = 0.95
+)
+print(full_cmat)
+```
+This is a correlation matrix for all variables. There are a lot of values and we don't have p-values so it is difficult to come to any conclusions from just this. Let's make a smaller correlation matrix as we aim to create our first regression model with fewer, more basic variables.
+
+
+```{r}
+basic_cmat <- cor_mat(
+  df,
+  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "population"),
+  method = "pearson",
+  alternative = "two.sided",
+  conf.level = 0.95
+)
+print(basic_cmat)
+
+
+cor_get_pval(basic_cmat)
+```
+Now we have the reduced correlation matrix with p values, but we can also create a visualization to have a better understanding of the results.
+
+```{r}
+basic_cmat %>%
+  cor_reorder() %>%
+  pull_lower_triangle() %>%
+  cor_plot(label = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
