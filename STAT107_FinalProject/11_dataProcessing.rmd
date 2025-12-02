@@ -248,8 +248,17 @@ basic_cmat %>%
   pull_lower_triangle() %>%
   cor_plot(label = TRUE)
 ```
+#Female_labor_rate & edu_exp only
+```{r}
+labor_exp_model <- lm(female_labor_rate ~ edu_exp, data = df)
+summary(labor_exp_model)
+```
 
-
+#First Basic Model
+```{r}
+basic_model <- lm(female_labor_rate ~ edu_exp + year + gdp + population, data = df)
+summary(basic_model)
+```
 
 
 
