@@ -94,6 +94,30 @@ colSums(!is.na(df))
 ```
 Certain columns have a large proportion of missing values which can be worrying when training models. However, these columns still have a large amount of observations despite the proportion of missing values. Since we plan on running a regression on our data, the high proportion of missing data should not have too large of an effect on our model so long as we have a large enough sample size. We can also omit different variables based on missingness and test the accuracy of different regression models. 
 
+#Year
+```{r}
+hist(df$year)
+```
+There more data from 2000 to 2020 and less data before 2000 and after 2020.
+
+#Missingness by year
+
+```{r}
+missing_table <- df %>%
+  group_by(year) %>%
+  summarise(across(everything(), ~sum(is.na(.)))) %>%
+  mutate(total_missing = rowSums(across(-year)))
+
+ggplot(missing_table, aes(x = factor(year), y = total_missing)) +
+  geom_col() +
+  labs(
+    title = "Total missing values per year",
+    x = "Year",
+    y = "Total missing values"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
 Our preliminary regression would most likely look something like:
 
 $$
@@ -187,8 +211,8 @@ hist(df$female_labor_rate, breaks = 50,
      main = "Distribution of Female Labor Participation Rate",
      xlab = "Female Labor Participation Rate (% of female population age 15+)")
 ```
-Female labor participation rate follow a distribution with little skewness and few outliers. 
-#Correlation Matrix
+Female labor participation rate follow a distribution with little skewness and few outliers.
+
 
 ```{r}
 full_cmat <- cor_mat(
