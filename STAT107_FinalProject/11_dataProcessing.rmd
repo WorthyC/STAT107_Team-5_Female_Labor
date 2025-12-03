@@ -331,26 +331,49 @@ basic_cmat %>%
   pull_lower_triangle() %>%
   cor_plot(label = TRUE)
 ```
-#Female_labor_rate & edu_exp only
+There seems to be very high correlation between fertility rate and birth rate. This makes sense as they are almost the same thing. It is important to consider this when including either variable in a regression model to avoid multicollinearity. Similarly we see a very high correlation between gdp and population. This is also important to keep in mind to avoid multicollinearity.
+
+#Model 0: Female_labor_rate & edu_exp only
 ```{r}
-labor_exp_model <- lm(female_labor_rate ~ edu_exp, data = df)
-summary(labor_exp_model)
+model0 <- lm(female_labor_rate ~ edu_exp, data = df)
+summary(model0)
+```
+Education expenditure seems to have a negative effect on the female labor rate. It is also significant at the 0.05 level. While the effect is somewhat small, it is different from what is expected. There are a few potential reasons for this. As we saw earlier, edu_exp is very skewed and there are a decent amount of extreme outliers. To combat this we could consider log transforming the variable. Something also to consider is potentially introducing a polynomial term. If edu_exp begins to have a weaker effect as it increases, the polynomial term will help capture this behavior.
+
+#Model 1: First Basic Model
+```{r}
+model1 <- lm(female_labor_rate ~ edu_exp + year + gdp + population, data = df)
+summary(model1)
+```
+GDP and Population are both insignificant. Coefficients for other variables have become very small. The correlation matrix showed that GDP and Population have very high correlation. This means that there is probably some collinearity present in the model. We will remove Population as GDP tends to be a better parameter when measuring economic factors.
+
+```{r}
+model1 <- lm(female_labor_rate ~ edu_exp + year + gdp, data = df)
+summary(model1)
 ```
 
-#First Basic Model
+GDP became more significant but still insignificant at the 0.05 level. edu_exp also became insignificant when removing population. We should try a model with a log transformed edu_exp.
+
+#Model 2: Lin-log model with log transformed edu_exp.
+
 ```{r}
-basic_model <- lm(female_labor_rate ~ edu_exp + year + gdp + population, data = df)
-summary(basic_model)
+#Create log variable
+df <- df %>%
+  filter(edu_exp > 0)
+
+df <- df %>%
+  mutate(log_edu_exp = log(edu_exp))
+
+summary(df$log_edu_exp)
+hist(df$log_edu_exp)
+```
+```{r}
+#Run model
+model2 <- lm(female_labor_rate ~ log_edu_exp + year + gdp, data = df)
+summary(model2)
 ```
 
-
-
-
-
-
-
-
-
+Education expenditure is now much more significant after logging it. GDP remains insignificant. Overall however, the model does not have much explanatory power as the R-squared is only 0.01146. We can try adding more variables to increase the explanatory power of the model.
 
 
 
