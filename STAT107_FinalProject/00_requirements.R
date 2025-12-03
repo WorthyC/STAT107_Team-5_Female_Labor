@@ -18,3 +18,8 @@ if (!require(rstatix)) {
   install.packages("rstatix")
 }
 library(rstatix)
+
+if(!require(corrplot)) {
+  install.packages("corrplot")
+}
+library(corrplot)

@@ -235,6 +235,67 @@ hist(df$female_labor_rate, breaks = 50,
 ```
 Female labor participation rate follow a distribution with little skewness and few outliers.
 
+#Multiple variable visualizations
+
+#Education Expenditure vs Female Labor
+
+```{r}
+plot(
+  x = df$edu_exp, y = df$female_labor_rate,
+  main = "Education Expenditure vs Female Labor Rate",
+  xlab = "Education Expenditure", ylab = "Female Labor Rate",
+  col = factor(df$country)
+)
+```
+No particularly clear patterns. Data seems to be rather skewed with a few extreme outliers. Could be a good idea to log education expenditure.
+
+#Birth Rates vs Female Labor
+
+```{r}
+plot(
+  x = df$birth_rate, y = df$female_labor_rate,
+  main = "Birth Rate vs Female Labor Rate",
+  xlab = "Birth Rate", ylab = "Female Labor Rate",
+  col = factor(df$country)
+)
+```
+No clear patterns between the two variables. Some countries show some patterns but overall there seems to be little to no relationship between the two variables.
+
+#Fertility Rates vs Female Labor
+
+```{r}
+plot(
+  x = df$fertility_rate, y = df$female_labor_rate,
+  main = "Fertility Rates vs Female Labor Rate",
+  xlab = "Fertility Rate", ylab = "Female Labor Rate",
+  col = factor(df$country)
+)
+```
+Same as Birth rate.
+
+#Parental Leave vs Female Labor
+
+```{r}
+#Maternal
+plot(
+  x = df$days_female, y = df$female_labor_rate,
+  main = "Days of Maternal Leave Given vs Female Labor Rate",
+  xlab = "Days of Maternal Leave", ylab = "Female Labor Rate",
+  col = factor(df$country)
+)
+
+#Paternal
+plot(
+  x = df$days_male, y = df$female_labor_rate,
+  main = "Days of Paternal Leave Given vs Female Labor Rate",
+  xlab = "Days of Paternal Leave", ylab = "Female Labor Rate",
+  col = factor(df$country)
+)
+
+```
+Once again no clear pattern
+
+#Correlation Matrix
 
 ```{r}
 full_cmat <- cor_mat(
@@ -252,7 +313,7 @@ This is a correlation matrix for all variables. There are a lot of values and we
 ```{r}
 basic_cmat <- cor_mat(
   df,
-  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "population"),
+  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "population", "birth_rate", "fertility_rate"),
   method = "pearson",
   alternative = "two.sided",
   conf.level = 0.95
