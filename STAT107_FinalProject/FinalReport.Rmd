@@ -11,7 +11,7 @@ load("12_dataSaving.RData")
 
 # Abstract:
 
-This study investigates the what impact birthrate has on a countries female labor. Additionally, we also want to explore if how much a country's expenditure on education affects the total amount of female contribution in the workforce. We aim to use visualizations such as histograms, box plots, and scatter plots to answer this question. Using these visualizations will allow us to see the distribution of key variables to help give a clear answer.
+Using data from the World Bank, we ran multiple different regression models to explore the effects that education expenditure and fertility rates have on female labor force participation. By using other variables like parental leave and tertiary school enrollment as control variables we are able to reduce omitted variable bias. After running multiple different models we found that higher education expenditure associates with higher female labor force participation. Fertility rates however, displayed a non-linear, U-shaped relationship with female labor force participation. Understanding of these relationships can assist policy makers with improving labor market outcomes and overall economic performance.
 
 # Introduction:
 
