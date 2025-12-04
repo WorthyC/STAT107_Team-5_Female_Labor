@@ -386,7 +386,7 @@ Education expenditure becomes insignificant once other variables are added to th
 ```{r}
 vif(model3)
 ```
-VIF shows us how much of the variance for a variable is inflated due to correlation with another variable. The lower the value the better. As suspected birth rate and fertility rate are highly correlated and are causing multicollinearity. We can run another model with one of these variables removed.
+VIF shows us how much of the variance for a variable is inflated due to correlation with another variable. The lower the value the better. As suspected birth rate and fertility rate are highly correlated and are causing multicollinearity. We can run another model with one of these variables removed. We will drop birth rate because fertility rate gives us information of how many children per woman which will be more helpful.
 
 ```{r}
 model3 <- lm(female_labor_rate ~ log_edu_exp + fertility_rate + days_female + enrolled_female + year + gdp, data = df)
@@ -394,3 +394,40 @@ summary(model3)
 vif(model3)
 ```
 Education expenditure and gdp are still insignificant. However, we've eliminated multicollinearity from the model. The R-squared for this model is 0.0785 which much better than model 2, but in terms of explanatory power still relatively low. Something to note is that the coefficient for fertility rate is positive when we should expect a negative relationship between fertility and female labor force participation. This is because intuitively, the more children a woman has, the less time they will have to work a job. There are many ways we can improve the model. We could introduce a quadratic term for fertility, consider region fixed effects or year fixed effect, and potential interaction terms.
+
+#Model 4: Exploring Fertility Rate.
+
+```{r}
+#bivariate
+fertxlabor1 <- lm(female_labor_rate ~ fertility_rate, data = df)
+summary(fertxlabor)
+```
+The coefficient for fertility rate is still positive. We would expect the opposite for more developed countries. However, less developed countries will high fertility rates and high female labor participation because most labor would be agricultural in these countries. We can assume that the relationship between fertility rate and female labor force participation across countries is not linear. To capture this behavior we can introduce a quadratic term for fertility rate.
+
+```{r}
+#bivariate + quadratic term
+fertxlabor2 <- lm(female_labor_rate ~ fertility_rate + I(fertility_rate^2), data = df)
+summary(fertxlabor2)
+```
+As expected, after we introduced the quadratic term the coefficient for fertility rate became negative. The coefficient for the quadratic term however, is positive. This means that at lower fertility rates, there is a negative relationship between fertility and female labor participation and at higher fertility rates, there is a positive relationship between fertility and female labor participation. We can then include the quadratic term in the whole model.
+
+```{r}
+model4 <- lm(female_labor_rate ~ log_edu_exp + fertility_rate + I(fertility_rate^2) + days_female + enrolled_female + year, data = df)
+summary(model4)
+```
+After introducing the quadratic term for fertility rates, education expenditure become significant again. The R-squared also increased to 0.1391. I also removed GDP because of its high insignificance.
+I would however, like to test out the normal education expenditure instead of the log term.
+
+```{r}
+model4 <- lm(female_labor_rate ~ edu_exp + fertility_rate + I(fertility_rate^2) + days_female + enrolled_female + year, data = df)
+summary(model4)
+
+```
+The normal education expenditure term actually performs better with this model. It's previous lack of significance was likely due to omitted variable bias. With the normal education expenditure the R-squared is slight higher.
+
+Check for multicollinearity just in case.
+```{r}
+vif(model4)
+```
+High VIF for fertility rate terms but that is expected. Since they are significant in our model we will leave them as is.
+
