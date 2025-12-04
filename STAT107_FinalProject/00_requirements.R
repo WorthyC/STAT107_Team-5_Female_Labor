@@ -23,3 +23,8 @@ if(!require(corrplot)) {
   install.packages("corrplot")
 }
 library(corrplot)
+
+if(!require(car)) {
+  install.packages("car")
+}
+library(car)

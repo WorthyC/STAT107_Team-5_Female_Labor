@@ -307,13 +307,13 @@ full_cmat <- cor_mat(
 )
 print(full_cmat)
 ```
-This is a correlation matrix for all variables. There are a lot of values and we don't have p-values so it is difficult to come to any conclusions from just this. Let's make a smaller correlation matrix as we aim to create our first regression model with fewer, more basic variables.
+This is a correlation matrix for all variables. There are a lot of values and we don't have p-values so it is difficult to come to any conclusions from just this. 
 
 
 ```{r}
 basic_cmat <- cor_mat(
   df,
-  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "population", "birth_rate", "fertility_rate"),
+  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "population", "birth_rate", "fertility_rate", "days_female", "enrolled_female"),
   method = "pearson",
   alternative = "two.sided",
   conf.level = 0.95
@@ -331,7 +331,7 @@ basic_cmat %>%
   pull_lower_triangle() %>%
   cor_plot(label = TRUE)
 ```
-There seems to be very high correlation between fertility rate and birth rate. This makes sense as they are almost the same thing. It is important to consider this when including either variable in a regression model to avoid multicollinearity. Similarly we see a very high correlation between gdp and population. This is also important to keep in mind to avoid multicollinearity.
+There seems to be very high correlation between fertility rate and birth rate. This makes sense as they are almost the same thing. It is important to consider this when including either variable in a regression model to avoid multicollinearity. Similarly we see a very high correlation between gdp and population. This is also important to keep in mind to avoid multicollinearity. Strong negative correlation between female tertiary enrollment and birth rates.
 
 #Model 0: Female_labor_rate & edu_exp only
 ```{r}
@@ -375,8 +375,22 @@ summary(model2)
 
 Education expenditure is now much more significant after logging it. GDP remains insignificant. Overall however, the model does not have much explanatory power as the R-squared is only 0.01146. We can try adding more variables to increase the explanatory power of the model.
 
+#Model 3: Including All Variables
 
+```{r}
+model3 <- lm(female_labor_rate ~ log_edu_exp + birth_rate + fertility_rate + days_female + enrolled_female + year + gdp, data = df)
+summary(model3)
+```
+Education expenditure becomes insignificant once other variables are added to the model. GDP similarly became largely insignificant. Every other variable is significant at the 0.05 level. However, from looking at the correlation matrix we know there is potentially some multicollinearity so we should run tests and remove variables causing multicollinearity.
 
+```{r}
+vif(model3)
+```
+VIF shows us how much of the variance for a variable is inflated due to correlation with another variable. The lower the value the better. As suspected birth rate and fertility rate are highly correlated and are causing multicollinearity. We can run another model with one of these variables removed.
 
-
-
+```{r}
+model3 <- lm(female_labor_rate ~ log_edu_exp + fertility_rate + days_female + enrolled_female + year + gdp, data = df)
+summary(model3)
+vif(model3)
+```
+Education expenditure and gdp are still insignificant. However, we've eliminated multicollinearity from the model. The R-squared for this model is 0.0785 which much better than model 2, but in terms of explanatory power still relatively low. Something to note is that the coefficient for fertility rate is positive when we should expect a negative relationship between fertility and female labor force participation. This is because intuitively, the more children a woman has, the less time they will have to work a job. There are many ways we can improve the model. We could introduce a quadratic term for fertility, consider region fixed effects or year fixed effect, and potential interaction terms.
