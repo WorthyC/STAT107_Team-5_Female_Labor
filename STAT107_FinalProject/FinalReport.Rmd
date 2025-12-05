@@ -18,7 +18,35 @@ The purpose of this analysis is the examine the relationships between specific v
 
 # Data:
 
-The data we will be utilizing for the analysis are: Birthrates, Fertility Rates, Parental Leave, Total Population, tertiary school enrollment, total expense of education, Female labor contribution, all of different countries. The GDP is also used but only from the US. We obtained all our data from world bank https://data.worldbank.org. There were a total of 45 variables and we cut it down most datasets down to under 10 due to many variables being unecessary for our research. Some datasets have around 6000-8000 observations, while larger ones contain 16000-20000. Removal of some variables was preformed as stated previously from 45 to as low as 4 for some sets. After that, datasets are then checked for any missing values and removed. Then column names for the sets are renamed to more descriptive names, and finally combined into one data frame to be used in comparisons and visualizations.
+Our analysis uses global datasets from the World Bank on female labor participation rates, government expenditure on education, birth rates, fertility rates, parental leave, tertiary school enrollment, and GDP. After removing unnecessary columns and creating consistent column names, we merged all the datasets into one dataframe. We then sorted the countries by the amount of missing values they had and removed any country with over 25% missing values.
+
+### Female Labor Participation Rate:
+
+The female labor participation rate is represented by female_labor_rate in our data. It is a quantitative variable that measures the female labor force participation rate in terms of % of female population ages 15+. It contains data for almost all countries in the world and spans from 1990 to 2024. Data can be found at https://data360.worldbank.org/en/indicator/WB_WDI_SL_TLF_CACT_FE_ZS.
+
+### Government Expenditure on Education
+
+Government expenditure on education is represented by edu_exp in our data. It is a quantitative variable that measures the government expenditure on education in terms of total % of GDP. It contains data for almost all countries in the world and spans from 1970 to 2023. Data can be found at https://data360.worldbank.org/en/indicator/WB_WDI_SE_XPD_TOTL_GD_ZS.
+
+### Birth Rate
+
+Birth rate is represented by birth_rate in our data. It is a quantitative variable that measures the crude birth rate per 1000 people. It contains data globally and spans from 1960 to 2023. Data can be found at https://data360.worldbank.org/en/indicator/WB_WDI_SP_DYN_CBRT_IN.
+
+### Fertility Rate
+
+Fertility rate is represented by fertility_rate in our data. It is a quantitative variable that measures the total total fertility rates in terms of births per woman. It contains data globally and spans from 1960 to 2023. Data can be found at https://data360.worldbank.org/en/indicator/WB_WDI_SP_DYN_TFRT_IN.
+
+### Maternal Leave
+
+Maternal leave is represented by days_female in our data. It is a quantitative variable that measures the total length of paid maternal leave in terms of calendar days. It containts data globally and spans from 1970 to 2023. Data can be found at https://genderdata.worldbank.org/en/indicator/sh-par-leve?.
+
+### Female Tertiary School Erollment
+
+Female tertiary school enrollment is represented by enrolled_female in our data. It is a quantitative variable that measures female tertiary school enrollment in terms of % gross. It contains data globally and spans from 1970 to 2024. Data can be found at http://genderdata.worldbank.org/en/indicator/se-ter-enrrl.
+
+### GDP
+
+GDP is represented by gdp in our data. It is a quantitative variable that measures a country's GDP in terms of US Dollars. It contains data globally that spans from 1960 to 2024. Data can be found at https://data360.worldbank.org/en/indicator/WB_WDI_NY_GDP_MKTP_CD.
 
 # Visualization:
 Below is a histogram of Government Expenditure on Education (% of GDP).
