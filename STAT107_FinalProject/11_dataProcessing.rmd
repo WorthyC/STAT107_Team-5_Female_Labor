@@ -240,6 +240,7 @@ Female labor participation rate follow a distribution with little skewness and f
 #Education Expenditure vs Female Labor
 
 ```{r}
+png("Figure1.png")
 plot(
   x = df$edu_exp, y = df$female_labor_rate,
   main = "Education Expenditure vs Female Labor Rate",
@@ -264,6 +265,7 @@ No clear patterns between the two variables. Some countries show some patterns b
 #Fertility Rates vs Female Labor
 
 ```{r}
+png("Figure2.png")
 plot(
   x = df$fertility_rate, y = df$female_labor_rate,
   main = "Fertility Rates vs Female Labor Rate",
@@ -313,7 +315,7 @@ This is a correlation matrix for all variables. There are a lot of values and we
 ```{r}
 basic_cmat <- cor_mat(
   df,
-  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "population", "birth_rate", "fertility_rate", "days_female", "enrolled_female"),
+  vars = c("year", "edu_exp", "female_labor_rate", "gdp", "birth_rate", "fertility_rate", "days_female", "enrolled_female"),
   method = "pearson",
   alternative = "two.sided",
   conf.level = 0.95
@@ -326,6 +328,7 @@ cor_get_pval(basic_cmat)
 Now we have the reduced correlation matrix with p values, but we can also create a visualization to have a better understanding of the results.
 
 ```{r}
+png("Figure3.png")
 basic_cmat %>%
   cor_reorder() %>%
   pull_lower_triangle() %>%
