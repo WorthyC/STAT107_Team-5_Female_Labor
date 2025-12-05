@@ -400,7 +400,7 @@ Education expenditure and gdp are still insignificant. However, we've eliminated
 ```{r}
 #bivariate
 fertxlabor1 <- lm(female_labor_rate ~ fertility_rate, data = df)
-summary(fertxlabor)
+summary(fertxlabor1)
 ```
 The coefficient for fertility rate is still positive. We would expect the opposite for more developed countries. However, less developed countries will high fertility rates and high female labor participation because most labor would be agricultural in these countries. We can assume that the relationship between fertility rate and female labor force participation across countries is not linear. To capture this behavior we can introduce a quadratic term for fertility rate.
 
