@@ -119,9 +119,9 @@ After applying the log transformation, education expenditure becomes significant
 
 We can now introduce the rest of our variables into our model. After some testing, we found that a model containing both birth rate and fertility rate showed extremely high levels of multicollinearity. Therefore, we decided to remove birth rates from our model and keep just fertility rates, which will give us a better understanding of individual household environments. 
 
-$$
+\begin{align*}
 female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2fertility\_rate + \beta_3days\_female + \\ \beta_4enrolled\_female + \beta_5year + \beta_6gdp + \varepsilon_i
-$$
+\end{align*}
 
 ```{r echo = FALSE}
 summary(model3)
@@ -148,9 +148,9 @@ summary(fertxlabor2)
 ```
 After introducing the quadratic term for fertility rate, the coefficient for the linear term becomes negative. This confirms our hypothesis that there is a non-linear relationship between fertility rate and female labor rate. We can finalize this model by introducing the quadratic term back to the original model with all of the other variables. 
 
-$$
+\begin{align*}
 female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2fertility\_rate + \beta_3fertility\_rate^2 \\ + \beta_4days\_female + \beta_5enrolled\_female + \beta_6year + \varepsilon_i
-$$
+\end{align*}
 
 ```{r echo = FALSE}
 summary(model4)
@@ -167,10 +167,5 @@ For every additional unit of female tertiary school enrollment, we expect on ave
 
 # Conclusions
 
-
-
-
-
-
-
+Based on the analysis of our models, we find that higher government expenditure on education is associated with higher levels of female labor force participation. We also found that the fertility rate has a non-linear U-shaped relationship with the female labor force participation rate. This means the the potential effects of fertility rate on the female labor force participation rate will vary for different countries. We also found that higher amounts of maternal leave is associated with lower amounts of female labor force participation and higher amounts of female tertiary school enrollment is associated with higher amounts of female labor force participation. There is a lot of additional work that can be done to further explore the relationships between these variables. This includes and is not limited to, introducing interaction terms, utilizing time-fixed effects and entity-fixed effects, as well as exploring additional variables that may provide more information on how the female labor force participation rate behaves. Overall, we were able to establish relatioships between select variables and the female labor force participation rate. Policy makers can use this information to make decisions that promote development and stability, increase access to education, and improve gender equality.
 
