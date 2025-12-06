@@ -9,6 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+source("00_requirements.R")
 load("12_dataSaving.RData")
 ```
 
@@ -77,6 +78,8 @@ Figure 3 shows us the correlation between all variables in our data. Birth rate 
 # Analysis:
 To better understand the true relationship between these variables and the effects these variables have on the female labor force participation rate, we ran multiple different regression models with the female labor force participation rate as our dependent variable.
 
+Each model will be paired with a visualization then a summary of the specific values tested afterwards.
+
 ### Model 0:
 
 First we want to run bivariate model with just education expenditure and female labor rate to get a better understanding of the relationship between just these two variables.
@@ -84,6 +87,13 @@ First we want to run bivariate model with just education expenditure and female 
 $$
 female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \varepsilon_i
 $$
+```{r echo=FALSE}
+plot(x = df$edu_exp, y = df$female_labor_rate, main = "Female Labor Rate vs Education Expenditure", xlab = "Education Expenditure", ylab = "Female Labor Rate",
+)
+
+abline(model0, col = "red", lwd = 2)
+```
+
 ```{r echo = FALSE}
 summary(model0)
 ```
@@ -97,6 +107,9 @@ $$
 female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2year + \beta_3gdp + \varepsilon_i
 $$
 
+```{r echo=FALSE}
+avPlots(model1, col.lines = "red", id = FALSE, main = "Education Exp. with Control Variables")
+```
 ```{r echo = FALSE}
 summary(model1)
 ```
@@ -109,7 +122,9 @@ From Figure 1 we saw that education expenditure was slightly skewed and had a fe
 $$
 female\_labor\_rate_i = \beta_0 + \beta_1log\_edu\_exp + \beta_2year + \beta_3gdp + \varepsilon_i
 $$
-
+```{r echo=FALSE}
+avPlots(model2, col.lines = "red", id = FALSE, main = "Education Expediture with Log")
+```
 ```{r echo = FALSE}
 summary(model2)
 ```
@@ -123,6 +138,9 @@ We can now introduce the rest of our variables into our model. After some testin
 female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2fertility\_rate + \beta_3days\_female + \\ \beta_4enrolled\_female + \beta_5year + \beta_6gdp + \varepsilon_i
 \end{align*}
 
+```{r echo=FALSE}
+avPlots(model3, col.lines = "red", id = FALSE, main = "Multivariate Model")
+```
 ```{r echo = FALSE}
 summary(model3)
 ```
@@ -135,6 +153,9 @@ To explore this potential this potential non-linear relationship between fertili
 $$
 female\_labor\_rate_i = \beta_0 + \beta_1fertility\_rate + \varepsilon_i
 $$
+```{r echo=FALSE}
+avPlots(fertxlabor1, col.lines = "red", id = FALSE, main = "Female Labor Rate vs. Fertility Rate")
+```
 ```{r echo = FALSE}
 summary(fertxlabor1)
 ```
@@ -143,6 +164,9 @@ Fertility remains both positive and significant in the bivariate simple regressi
 $$
 female\_labor\_rate_i = \beta_0 + \beta_1fertility\_rate + \beta_2fertility\_rate^2+ \varepsilon_i
 $$
+```{r echo=FALSE}
+avPlots(fertxlabor2, col.lines = "red", id = FALSE, main = "Quadratic Representation")
+```
 ```{r echo = FALSE}
 summary(fertxlabor2)
 ```
@@ -152,6 +176,9 @@ After introducing the quadratic term for fertility rate, the coefficient for the
 female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2fertility\_rate + \beta_3fertility\_rate^2 \\ + \beta_4days\_female + \beta_5enrolled\_female + \beta_6year + \varepsilon_i
 \end{align*}
 
+```{r echo=FALSE}
+avPlots(model4, col.lines = "red", id = FALSE, main = "Multivariate Model with Quadratic")
+```
 ```{r echo = FALSE}
 summary(model4)
 ```
