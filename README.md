@@ -20,8 +20,8 @@ To run our preliminary process and visualizations, download all files in
 the repository (if its a .zip, extract the files from it). Then use RStudio
 to run "11_dataProcessing.rmd". This will load our current progress in this
 investigation.\
-If running our Final Report, you can run it independently throught RStudio.\
+If running our Final Report, you can run it independently through RStudio.\
 \
 Contributions:\
-Chris Whall: Repository Set-up/Initial Files, Drafting Final Report, Requirements\
-Jonathan Li: Data Cleaning, Visualizations, Adding Necessary Datasets
+Chris Whall: Repository Set-up/Initial Files, Drafting Final Report, Requirements, Regression Visualizations\
+Jonathan Li: Data Cleaning, Visualizations, Adding Necessary Datasets, Final Report, Regression Models
