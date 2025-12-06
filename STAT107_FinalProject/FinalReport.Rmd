@@ -1,8 +1,10 @@
 ---
-title: "The Impacts of Female Labor"
+title: "The Effects of Education and Fertility on Female Labor"
 author: "Jonathan Li and Chris Whall"
-output: pdf_document
 date: "2025-11-07"
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -73,4 +75,102 @@ Figure 3: Correlation Matrix across all variables.
 Figure 3 shows us the correlation between all variables in our data. Birth rate and fertility show extremely high positive correlation. This makes sense as they are fundamentally very similar statistics. We will have to be very careful when modeling both of these variables as we would risk collinearity. Female tertiary school enrollment has very high negative correlation with birth rate and fertility rate. It seems that as more women enter higher education, less children are born. There is a very weak negative significant relationship between education expenditure and female labor force participation. This is very strange as we expect there to be a stronger positive correlation between the two variables. Running a model with these two variables and other variables could provide more information on the behavior of this relationship. GDP seems to not have a significant effect on the female labor force participation rate. We can include it in initial models, but potentially look to omit if it seems to provide no value to the model.
 
 # Analysis:
+To better understand the true relationship between these variables and the effects these variables have on the female labor force participation rate, we ran multiple different regression models with the female labor force participation rate as our dependent variable.
+
+### Model 0:
+
+First we want to run bivariate model with just education expenditure and female labor rate to get a better understanding of the relationship between just these two variables.
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \varepsilon_i
+$$
+```{r echo = FALSE}
+summary(model0)
+```
+In this model, we see that education expenditure has a significant negative effect on the female labor rate similar to the correlation matrix in Figure 3. According to this model, if a country spends no money on education, the expected female labor rate is 52.4011. For every unit increase in education expenditure, the female labor rate is expected to decrease by -0.2248. Intuitively, this doesn't make much sense. While the coefficient is significant at the 5% level, it is very close to being insignificant and at higher levels it does become insignificant. It is possible that adding more variables will reduce ommitted variable bias and provide accurate model.
+
+### Model 1:
+
+Next, we can introduce basic control variables like year and GDP. Doing this will potentially create some changes in how the regression calculates the relationship between education expenditure and the female labor rate.
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2year + \beta_3gdp + \varepsilon_i
+$$
+
+```{r echo = FALSE}
+summary(model1)
+```
+In this model, we see that education expenditure actually becomes statistically insignificant at the 5% level. GDP is also insignificant at the 5% level. Overall, this model doesn't provide much explanatory value as the only significant variable is the year. This model just tells us that as time passes, the female labor rate will increase. The R-squared for this model is 0.008211 which is very small telling us that this model is rather weak in explaining the effects of education expenditure, year, and gdp on the female labor rate.
+
+### Model 2
+
+From Figure 1 we saw that education expenditure was slightly skewed and had a few very extreme outliers. This could be affecting the model and making it less accurate. To try and combat this we can apply a log transformation to education expenditure and testing a linear-log model.
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1log\_edu\_exp + \beta_2year + \beta_3gdp + \varepsilon_i
+$$
+
+```{r echo = FALSE}
+summary(model2)
+```
+After applying the log transformation, education expenditure becomes significant at the 5% level. This model tells us that for every 1% increase in education expenditure, we expect a decrease in the female labor rate by -0.02078 keeping all else constant. However intuitively, this doesn't make much sense. We expect that as government expenditure in education increases, the female labor rate should increase instead of decrease. Adding more variables will further reduce omitted variable bias and possibly give us a more accurate model. Overall, Model 2 shows improvement over Model 1 as its R-squared is 0.01146 giving it slightly more explanatory power. 
+
+### Model 3
+
+We can now introduce the rest of our variables into our model. After some testing, we found that a model containing both birth rate and fertility rate showed extremely high levels of multicollinearity. Therefore, we decided to remove birth rates from our model and keep just fertility rates, which will give us a better understanding of individual household environments. 
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2fertility\_rate + \beta_3days\_female + \\ \beta_4enrolled\_female + \beta_5year + \beta_6gdp + \varepsilon_i
+$$
+
+```{r echo = FALSE}
+summary(model3)
+```
+After introducing other variables, the coefficient for logged education expenditure becomes positive, but become insignificant. All other variables besides GDP are significant at the 5% level. This model tells us that for every one unit increase in the fertility rate, we expect on average a 3.689 increase in the female labor rate keeping all else constant. However, we would normally expect the fertility rate to have a negative relationship with the female labor rate, as if more women are working, they will have less time to have children. It is possible that there is a non-linear relationship between the fertility rate and the female labor rate. Overall, this model shows improvements over Model 2 in terms of the R-squared value.
+
+### Model 4 :
+
+To explore this potential this potential non-linear relationship between fertility rate and female labor rate, we can run bivariate regression with just fertility rate and female labor rate.
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1fertility\_rate + \varepsilon_i
+$$
+```{r echo = FALSE}
+summary(fertxlabor1)
+```
+Fertility remains both positive and significant in the bivariate simple regression. We would expect the opposite for more developed countries. However, less developed countries will high fertility rates and high female labor participation because most labor would be agricultural in these countries. We can assume that the relationship between fertility rate and female labor force participation across countries is not linear. To capture this behavior we can introduce a quadratic term for fertility rate.
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1fertility\_rate + \beta_2fertility\_rate^2+ \varepsilon_i
+$$
+```{r echo = FALSE}
+summary(fertxlabor2)
+```
+After introducing the quadratic term for fertility rate, the coefficient for the linear term becomes negative. This confirms our hypothesis that there is a non-linear relationship between fertility rate and female labor rate. We can finalize this model by introducing the quadratic term back to the original model with all of the other variables. 
+
+$$
+female\_labor\_rate_i = \beta_0 + \beta_1edu\_exp + \beta_2fertility\_rate + \beta_3fertility\_rate^2 \\ + \beta_4days\_female + \beta_5enrolled\_female + \beta_6year + \varepsilon_i
+$$
+
+```{r echo = FALSE}
+summary(model4)
+```
+After running some tests, we found that with the quadratic term introduced, the normal education expenditure variable performed better in the model. This means that the previous insignificance was simply caused by omitted variable bias. We also removed GDP from the model due to its consistent insignificance. The R-squared for this model is 0.1404 which is an improvement from Model 3.
+
+According to Model 4, for every one unit increase in government expenditure on education, we expect on average a 0.6133 increase in the female labor rate keeping all else constant. The more governments spend on education, the more woman are willing to participate in the labor force. This is important to the economy as this means higher employment and a stronger more stable economy. 
+
+Fertility rate and female labor rates have a non-linear U-shaped relationship meaning that for more developed countries that already have low fertility rates, increasing the fertility rate will decrease the female labor rate. However, for less developed countries that already have high fertility rates, increasing the fertility rate will actually increase the female labor rate. This information can help governments decide on certain policies to improve their country's economy. This being said, it is important to keep in mind that fertility rate and female labor rate may not have a completely causal relationship. As countries become more developed and more urbanized, the fertility rate will naturally decrease as a side effect. There may be confounding variables between these two variables or even reverse causality.
+
+For every additional day of maternal leave given, we expect on average a decrease of 0.02323 in the female labor rate. Maternal leave, while significant at the 5% level, may similarly not have a clear causal effect on the female labor rate. While we assume that having more maternal leave may encourage more women to enter the labor force, our model tells us otherwise. It is important to consider possible confounders. For example, it is possible that countries with high amounts of maternal leave are countries that are very progressive and already have very strong economies that do not require women to provide for their households. This is just one possible explanation for this interesting behavior that can be futher explored.
+
+For every additional unit of female tertiary school enrollment, we expect on average an increase of 0.05927 in the female labor rate. This further supports the idea that investing in education will increase the female labor rate. If more women have higher education credentials, more women will be willing to enter the labor force.
+
+# Conclusions
+
+
+
+
+
+
+
 
