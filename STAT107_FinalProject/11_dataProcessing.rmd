@@ -339,6 +339,12 @@ There seems to be very high correlation between fertility rate and birth rate. T
 #Model 0: Female_labor_rate & edu_exp only
 ```{r}
 model0 <- lm(female_labor_rate ~ edu_exp, data = df)
+
+plot(x = df$edu_exp, y = df$female_labor_rate, main = "Female Labor Rate vs Education Expenditure", xlab = "Education Expenditure", ylab = "Female Labor Rate",
+)
+
+abline(model0, col = "red", lwd = 2)
+
 summary(model0)
 ```
 Education expenditure seems to have a negative effect on the female labor rate. It is also significant at the 0.05 level. While the effect is somewhat small, it is different from what is expected. There are a few potential reasons for this. As we saw earlier, edu_exp is very skewed and there are a decent amount of extreme outliers. To combat this we could consider log transforming the variable. Something also to consider is potentially introducing a polynomial term. If edu_exp begins to have a weaker effect as it increases, the polynomial term will help capture this behavior.
@@ -346,12 +352,18 @@ Education expenditure seems to have a negative effect on the female labor rate. 
 #Model 1: First Basic Model
 ```{r}
 model1 <- lm(female_labor_rate ~ edu_exp + year + gdp + population, data = df)
+
+avPlots(model1, col.lines = "red", id = FALSE)
+
 summary(model1)
 ```
 GDP and Population are both insignificant. Coefficients for other variables have become very small. The correlation matrix showed that GDP and Population have very high correlation. This means that there is probably some collinearity present in the model. We will remove Population as GDP tends to be a better parameter when measuring economic factors.
 
 ```{r}
 model1 <- lm(female_labor_rate ~ edu_exp + year + gdp, data = df)
+
+avPlots(model1, col.lines = "red", id = FALSE)
+
 summary(model1)
 ```
 
@@ -373,6 +385,9 @@ hist(df$log_edu_exp)
 ```{r}
 #Run model
 model2 <- lm(female_labor_rate ~ log_edu_exp + year + gdp, data = df)
+
+avPlots(model2, col.lines = "red", id = FALSE)
+
 summary(model2)
 ```
 
@@ -382,6 +397,9 @@ Education expenditure is now much more significant after logging it. GDP remains
 
 ```{r}
 model3 <- lm(female_labor_rate ~ log_edu_exp + birth_rate + fertility_rate + days_female + enrolled_female + year + gdp, data = df)
+
+avPlots(model3, col.lines = "red", id = FALSE)
+
 summary(model3)
 ```
 Education expenditure becomes insignificant once other variables are added to the model. GDP similarly became largely insignificant. Every other variable is significant at the 0.05 level. However, from looking at the correlation matrix we know there is potentially some multicollinearity so we should run tests and remove variables causing multicollinearity.
@@ -393,6 +411,9 @@ VIF shows us how much of the variance for a variable is inflated due to correlat
 
 ```{r}
 model3 <- lm(female_labor_rate ~ log_edu_exp + fertility_rate + days_female + enrolled_female + year + gdp, data = df)
+
+avPlots(model3, col.lines = "red", id = FALSE)
+
 summary(model3)
 vif(model3)
 ```
@@ -403,6 +424,9 @@ Education expenditure and gdp are still insignificant. However, we've eliminated
 ```{r}
 #bivariate
 fertxlabor1 <- lm(female_labor_rate ~ fertility_rate, data = df)
+
+avPlots(fertxlabor1, col.lines = "red", id = FALSE)
+
 summary(fertxlabor1)
 ```
 The coefficient for fertility rate is still positive. We would expect the opposite for more developed countries. However, less developed countries will high fertility rates and high female labor participation because most labor would be agricultural in these countries. We can assume that the relationship between fertility rate and female labor force participation across countries is not linear. To capture this behavior we can introduce a quadratic term for fertility rate.
@@ -410,12 +434,18 @@ The coefficient for fertility rate is still positive. We would expect the opposi
 ```{r}
 #bivariate + quadratic term
 fertxlabor2 <- lm(female_labor_rate ~ fertility_rate + I(fertility_rate^2), data = df)
+
+avPlots(fertxlabor2, col.lines = "red", id = FALSE)
+
 summary(fertxlabor2)
 ```
 As expected, after we introduced the quadratic term the coefficient for fertility rate became negative. The coefficient for the quadratic term however, is positive. This means that at lower fertility rates, there is a negative relationship between fertility and female labor participation and at higher fertility rates, there is a positive relationship between fertility and female labor participation. We can then include the quadratic term in the whole model.
 
 ```{r}
 model4 <- lm(female_labor_rate ~ log_edu_exp + fertility_rate + I(fertility_rate^2) + days_female + enrolled_female + year, data = df)
+
+avPlots(model4, col.lines = "red", id = FALSE)
+
 summary(model4)
 ```
 After introducing the quadratic term for fertility rates, education expenditure become significant again. The R-squared also increased to 0.1391. I also removed GDP because of its high insignificance.
@@ -423,6 +453,9 @@ I would however, like to test out the normal education expenditure instead of th
 
 ```{r}
 model4 <- lm(female_labor_rate ~ edu_exp + fertility_rate + I(fertility_rate^2) + days_female + enrolled_female + year, data = df)
+
+avPlots(model4, col.lines = "red", id = FALSE)
+
 summary(model4)
 
 ```
